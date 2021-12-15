@@ -47,6 +47,7 @@ In addition, the boost and systemc library locations are expected to be in `LD_L
 
 # Directory structure
 
+* `TUTORIAL.md` information on getting started
 * `bin` contains Python scripts for interconnect prototyping assistant
 * `cmod/interconnect/include/*.h` contains header files for functions and classes for Interconnect Prototyping Assistant
 * `cmod/interconnect/ProducerConsumer` sub-directories containing example IPA use
