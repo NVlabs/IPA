@@ -86,7 +86,7 @@ File type: YAML
 
 ### Interconnect Topology Options
 
-#### Common Options
+#### Common YAML Options
 
 `wire_prop_speed`: Sets the speed in clock cycles of wires per unit-distance. For `X` units of manhattan distance, `ceil(X/wire_prop_speed)` of clock cycles are needed.  (default: 1.0)
 `extra_latency` (modeling only): Extra latency to add to an interconnect type, in clock cycles. Useful for sensitivity analysis. Will also be added to generated interconnect as increased number of retiming stages. (default: 0)
@@ -94,15 +94,15 @@ File type: YAML
 
 #### Directly-Connected Links
 
-YAML topology type set to `link`.
+YAML interconnect topology type set to `link`.
 
 No additional supported options beyond the common options set above.
 
 #### Centralized Crossbar
 
-YAML topology type set to `crossbar`.
+YAML interconnect topology type set to `crossbar`.
 
-Supported YAML Options:
+Supported YAML options:
 
 * `crossbar_latency` (modeling only): Cycle latency through the crossbar, from input to output.  (default: 2)
 * `crossbar_bw` (modeling only): Amount of bandwidth supported by the crossbar as a multiples of the max message size through the crossbar. -1 indicates no limits.  (default: -1)
@@ -111,9 +111,9 @@ Supported YAML Options:
 
 #### Uniform Mesh Network-on-Chip
 
-YAML topology type set to `noc`.
+YAML interconnect topology type set to `noc`.
 
-Supported YAML Options:
+Supported YAML options:
 
 `router_latency` (modeling only): Cycle latency through a router, from input to output. It should be set for what the router can be scheduled for in HLS.  (default: 1)
 `router_spacing`: Unit distance between routers on floorplan.  (default: 1.0)
