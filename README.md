@@ -41,12 +41,13 @@ In addition, the boost and systemc library locations are expected to be in `LD_L
     make
     make run 
 
-### HLS run and Verilog simulate all
+### HLS run
     cd hls/ProducerConsumer/Grout_0
     make hls
 
 # Directory structure
 
+* `TUTORIAL.md` information on getting started
 * `bin` contains Python scripts for interconnect prototyping assistant
 * `cmod/interconnect/include/*.h` contains header files for functions and classes for Interconnect Prototyping Assistant
 * `cmod/interconnect/ProducerConsumer/` sub-directories containing example IPA use
