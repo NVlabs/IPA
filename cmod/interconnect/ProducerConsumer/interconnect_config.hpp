@@ -26,7 +26,7 @@
 
 namespace interconnect_config {
 IC_BEGIN_INTERCONNECTS
-IC_ADD_INTERCONNECT(pemodulearray)
+IC_ADD_INTERCONNECT(pcmodulearray)
 IC_END_INTERCONNECTS
 
 // Maps are used to set custom numbered routing, for flit adapter traffic or

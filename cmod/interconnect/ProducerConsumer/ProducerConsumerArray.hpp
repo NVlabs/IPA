@@ -40,7 +40,7 @@ class ProducerConsumerArray : public match::Module {
   static const int kPEHeight = PE_HEIGHT;
 
   ProducerConsumerPart *pe_part_inst[kPEWidth * kPEHeight];
-  IC_HAS_INTERCONNECT(pemodulearray);
+  IC_HAS_INTERCONNECT(pcmodulearray);
 
   ProducerConsumerArray(sc_module_name nm) : match::Module(nm) {
     ic.clk(clk);

@@ -23,7 +23,7 @@ BUILD ?= $(PE_WIDTH)x$(PE_HEIGHT)
 DEBUG_LEVEL ?= -1
 
 # The below must match up with interconnect_designer.py
-INTERCONNECT_SC_OBJECT_PATH := my_testbench.dut.pemodulearray_inst.interconnect_0
+INTERCONNECT_SC_OBJECT_PATH := my_testbench.dut.pcmodulearray_inst.interconnect_0
 INTERCONNECT_TB_OBJECT_PATH := my_testbench.dut.interconnect_0
 
 include $(ROOT)/cmod/interconnect/Interconnect.mk
@@ -42,7 +42,6 @@ INTERCONNECT_DISABLE_CONGESTION ?= 0
 
 # For CSolver
 CFLAGS += -I${VCS_HOME}/include
-CFLAGS += -I${RAPIDJSON_HOME}/include
 CFLAGS += -g
 
 PE_ACTIVITY ?= 1.00

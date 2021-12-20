@@ -24,7 +24,7 @@ PE_HEIGHT ?= 4
 BUILD ?= $(PE_WIDTH)x$(PE_HEIGHT)
 
 # The below must match up with interconnect_designer.py and interconnect_update.py. They can't be changed arbitrarly.
-INTERCONNECT_SC_OBJECT_PATH := my_testbench.dut.pemodulearray_inst.interconnect_0
+INTERCONNECT_SC_OBJECT_PATH := my_testbench.dut.pcmodulearray_inst.interconnect_0
 INTERCONNECT_TB_OBJECT_PATH := my_testbench.dut.interconnect_0
 
 include ${ROOT}/cmod/interconnect/Interconnect.mk

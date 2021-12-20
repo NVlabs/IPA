@@ -37,12 +37,12 @@ class DUT : public sc_module {
   sc_in_clk clk;
   sc_in<bool> rst;
 
-  ProducerConsumerArray pemodulearray_inst;
+  ProducerConsumerArray pcmodulearray_inst;
 
   DUT(sc_module_name nm)
-      : sc_module(nm), pemodulearray_inst("pemodulearray_inst") {
-    pemodulearray_inst.clk(clk);
-    pemodulearray_inst.rst(rst);
+      : sc_module(nm), pcmodulearray_inst("pcmodulearray_inst") {
+    pcmodulearray_inst.clk(clk);
+    pcmodulearray_inst.rst(rst);
   }
 };
 
@@ -130,8 +130,8 @@ int sc_main(int argc, char* argv[]) {
   }
 
 #if !defined(INTERCONNECT_GEN)
-  my_testbench.dut.pemodulearray_inst.ic.pretty_print();
-  my_testbench.dut.pemodulearray_inst.ic.print_statistics();
+  my_testbench.dut.pcmodulearray_inst.ic.pretty_print();
+  my_testbench.dut.pcmodulearray_inst.ic.print_statistics();
 #endif
   get_pc_log().print_stats();
   get_pc_log().print_pre_stats();

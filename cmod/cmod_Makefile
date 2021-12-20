@@ -20,8 +20,7 @@ ROOT ?= $(TOT)
 
 # Location of submodules
 RAPIDJSON_HOME ?= $(ROOT)/rapidjson
-#MATCHLIB_HOME ?= $(ROOT)/matchlib
-MATCHLIB_HOME ?= /home/avr/tools/matchlib_releases/2020-08-26_221181
+MATCHLIB_HOME ?= $(ROOT)/matchlib
 
 CC = g++
 
