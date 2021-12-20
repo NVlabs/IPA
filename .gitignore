@@ -32,4 +32,12 @@
 *.app
 
 # Python
-__pycache__
+__pycache__/
+
+# Other
+work/
+*.log
+*.code-workspace
+sim_*_gen
+sim_*_model
+catapult_cache/
