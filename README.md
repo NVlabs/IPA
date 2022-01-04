@@ -36,6 +36,12 @@ In addition, the boost and systemc library locations are expected to be in `LD_L
 
 ## Build and run example
 
+### Recursively checkout matchlib submodule
+
+    git submodule update --init --recursive
+
+MatchLib will be downloaded to matchlib/ and rapidjson to matchlib/rapidjson/.
+
 ### C++ compile and simulate
     cd cmod/ProducerConsumer/
     make

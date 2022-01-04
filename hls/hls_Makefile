@@ -18,8 +18,8 @@
 TOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../)
 
 # Location of submodules
-RAPIDJSON_HOME ?= $(ROOT)/rapidjson
 MATCHLIB_HOME ?= $(ROOT)/matchlib
+RAPIDJSON_HOME ?= $(MATCHLIB_HOME)/rapidjson
 
 export ROOT           := $(TOT)
 export TOP_NAME       ?= $(shell basename `pwd`)

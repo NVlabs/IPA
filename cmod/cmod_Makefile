@@ -19,8 +19,8 @@ TOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../)
 ROOT ?= $(TOT)
 
 # Location of submodules
-RAPIDJSON_HOME ?= $(ROOT)/rapidjson
 MATCHLIB_HOME ?= $(ROOT)/matchlib
+RAPIDJSON_HOME ?= $(MATCHLIB_HOME)/rapidjson
 
 CC = g++
 
