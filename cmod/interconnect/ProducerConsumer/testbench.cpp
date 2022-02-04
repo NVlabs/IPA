@@ -57,7 +57,7 @@ SC_MODULE(testbench) {
   testbench(sc_module_name name_)
       : sc_module(name_),
         dut("dut"),
-        clk("clk", 1.0, SC_NS, 0.5, 0, SC_NS, false),
+        clk("clk", 1.0, SC_NS, 0.5, 0, SC_NS, true),
         rst("rst") {
 
     Connections::set_sim_clk(&clk);

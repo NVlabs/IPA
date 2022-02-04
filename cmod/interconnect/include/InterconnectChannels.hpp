@@ -211,10 +211,36 @@ class ConManagerLinks : public Connections::ConManager {
   }
 
   void run(bool value) {
-    Connections::get_sim_clk()
-        .post_delay();  // align to occur just after the cycle
+    wait(SC_ZERO_TIME);  // Allow the simulation to catch up with clock
+                         // registration, etc...
+
+#ifdef CAP_CONNECTIONS_MULTI_CLK
+    // Find all that we (ConManagerLinks) are tracking and remove from
+    // tracked_per_clk.
+    for (auto it_to_find = links_tracked.begin();
+         it_to_find != links_tracked.end(); ++it_to_find) {
+      for (auto it_outer =
+               Connections::get_conManager().tracked_per_clk.begin();
+           it_outer != Connections::get_conManager().tracked_per_clk.end();
+           ++it_outer) {
+        for (auto it_inner = (*it_outer)->begin();
+             it_inner != (*it_outer)->end(); ++it_inner)
+          if (*it_inner == it_to_find->second) {
+            (*it_outer)->erase(it_inner);
+          }
+      }
+    }
+#endif
 
     bool last_degraded_mode = false;
+
+#ifdef CAP_CONNECTIONS_MULTI_CLK
+    Connections::get_sim_clk().post_delay(
+        0);  // align to occur just after the cycle
+#else
+    Connections::get_sim_clk()
+        .post_delay();  // align to occur just after the cycle
+#endif
 
     while (1) {
       bool degraded_mode = false;
@@ -286,8 +312,12 @@ class ConManagerLinks : public Connections::ConManager {
         else
           links.erase(it);
 
-      // Post -> Pre delay like normal
+// Post -> Pre delay like normal
+#ifdef CAP_CONNECTIONS_MULTI_CLK
+      Connections::get_sim_clk().post2pre_delay(0);
+#else
       Connections::get_sim_clk().post2pre_delay();
+#endif
 
       for (std::vector<CombinationalLink_abs*>::iterator it = links.begin();
            it != links.end();)
@@ -353,12 +383,29 @@ class CombinationalLink : public Connections::Combinational<Message>,
     return true;
   }
 
-  bool IsValid() { return this->out_val.read(); }
+  bool IsValid() {
 
-  bool IsReady() { return this->out_rdy.read(); }
+#ifdef CONNECTIONS_ACCURATE_SIM
+    return this->out_val.read();
+#else
+    return false;  // FIXME CONNECTONS_FAST_SIM is currently unsupported by IPA
+#endif
+  }
+
+  bool IsReady() {
+#ifdef CONNECTIONS_ACCURATE_SIM
+    return this->out_rdy.read();
+#else
+    return false;  // FIXME CONNECTONS_FAST_SIM is currently unsupported by IPA
+#endif
+  }
 
   virtual bool ShouldSkipUpdateCongest() {
+#ifdef CONNECTIONS_ACCURATE_SIM
     return (!(IsValid() && IsReady())) || this->is_bypass();
+#else
+    return false;  // FIXME CONNECTONS_FAST_SIM is currently unsupported by IPA
+#endif
   }
 
   void Reset_BWProb() { bw_prob = 1.0; }

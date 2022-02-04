@@ -132,6 +132,12 @@ Unit Options
 `y_coor`: Y-coordinate in arbitrary units of partition instance on floorplan.  (default: 0.0)
 `inject` (modeling only): When True marks that message to/from this partition should not be annotated with latency or capacity during modeling. Useful for testbench partitions that don't have physical meaning.  (default: False)
 
+# Known Issues
+
+CONNECTIONS_FAST_SIM is currently not supported by IPA (will not compile).
+
+Newer versions of Connections bundled with Catapult are supported, but a compiler flag may need to be used. In particular, Connections multi clock support will not compile without the `-DCAP_CONNECTIONS_MULTI_CLK` compiler flag. The sample Makefile in cmod/interconnect/ProducerConsumer/ attempts to detect the Catapult version, and set the flag appropriately. IPA always uses the first registered clock (assumes one clock for the system). Multi clock support within IPA will come at a later time.
+
 # Contributors
 
 MatchLib originated as a project of [NVIDIA Research](https://research.nvidia.com).

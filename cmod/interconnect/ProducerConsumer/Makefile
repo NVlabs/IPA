@@ -37,6 +37,12 @@ USER_FLAGS += -DCONNECTIONS_NAMING_ORIGINAL
 USER_FLAGS += -DSC_INCLUDE_DYNAMIC_PROCESSES -DCONNECTIONS_ACCURATE_SIM
 USER_FLAGS += -DRAPIDJSON_HAS_STDSTRING=1 -DENABLE_PERF_COUNTERS
 USER_FLAGS += -DPE_WIDTH=$(PE_WIDTH) -DPE_HEIGHT=$(PE_HEIGHT)
+ifneq ($(shell echo "${CATAPULT_HOME}" | grep '10\.'),)
+# 10.x we do not add this capability in.
+else
+# Assumes 2021 and above
+USER_FLAGS += -DCAP_CONNECTIONS_MULTI_CLK
+endif
 
 INTERCONNECT_DISABLE_CONGESTION ?= 0
 
@@ -142,7 +148,7 @@ clean: cov_clean
 	rm -f "${CONNECTIVITY_TB_JSON}" "${OUTPUT_TB_JSON}"
 	rm -f "${YAML_CONFIG}" "${YAML_CONFIG_TEMPLATE}" "$(INTERCONNECT_RPT)" "$(INTERCONNECT_GEN_HPP_FILE)" "$(INTERCONNECT_PHY_RPT)"
 	rm -f "$(INTERCONNECT_DIR)/interconnect_gen_mazeRoute.pm" "$(INTERCONNECT_DIR)/interconnect_gen_mazeRoute_post.sh"
-	! test -d "$(INTERCONNECT_DIR)" || rmdir "$(INTERCONNECT_DIR)"
+	! test -d "$(INTERCONNECT_DIR)" || rmdir --ignore-fail-on-non-empty "$(INTERCONNECT_DIR)"
 
 .PHONY: sim_clean
 sim_clean:

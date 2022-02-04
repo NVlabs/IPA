@@ -55,6 +55,13 @@ ifeq ($(SIM_MODE),2)
 	COMPILER_FLAGS += CONNECTIONS_FAST_SIM SC_INCLUDE_DYNAMIC_PROCESSES
 endif
 
+ifneq ($(shell echo "${CATAPULT_HOME}" | grep '10\.'),)
+# 10.x we do not add this capability in.
+else
+# Assumes 2021 and above
+USER_FLAGS += -DCAP_CONNECTIONS_MULTI_CLK
+endif
+
 # RAND_STALL (SystemC code, RTL is unaffected)
 # 0 = Random stall of ports and channels disabled (default)
 # 1 = Random stall of ports and channels enabled
