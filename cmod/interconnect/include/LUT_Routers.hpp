@@ -47,6 +47,8 @@
 #include <nvhls_assert.h>
 #include <crossbar.h>
 
+namespace interconnect {
+
 enum WHRouting { SourceRouting, LUTRouting };
 /**
  * \brief Wormhole Router with virtual channels
@@ -2412,5 +2414,6 @@ class HybridRouter : public sc_module {
     }
   }
 };
+}
 
 #endif  //__LUT_ROUTERS_H__

@@ -3206,7 +3206,7 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
                 mcast_noc_dests = noc_dests
                 ic_collate_select(ic_id, grout_instances)
                 if topo_options['router_module'] == 'HybridRouter':
-                    ic_collate_add("HybridRouter<{num_l_ports}, {num_r_ports}, {buffersize}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {nop_dests}, {noc_dests}, {mcast_noc_dests}, {maxpktsize}> router_{i}_{msg_name};".format(
+                    ic_collate_add("interconnect::HybridRouter<{num_l_ports}, {num_r_ports}, {buffersize}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {nop_dests}, {noc_dests}, {mcast_noc_dests}, {maxpktsize}> router_{i}_{msg_name};".format(
                                                                                                     i=i,
                                                                                                     ic_id=ic_id,
                                                                                                     num_l_ports=num_l_ports,
@@ -3219,7 +3219,7 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
                                                                                                     msg_name=msg_name))
                 elif topo_options['router_module'] == 'WHVCRouter_LUTRouting':
                     # Note, max hops is unused for LUT routing, so we set it to -1 to indicate invalid.
-                    ic_collate_add("WHVCRouter<{num_l_ports}, {num_r_ports}, 1, {buffersize}, -1, LUTRouting, {nop_dests}, {noc_dests}, {mcast_noc_dests}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {maxpktsize}> router_{i}_{msg_name};".format(
+                    ic_collate_add("interconnect::WHVCRouter<{num_l_ports}, {num_r_ports}, 1, {buffersize}, -1, LUTRouting, {nop_dests}, {noc_dests}, {mcast_noc_dests}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {maxpktsize}> router_{i}_{msg_name};".format(
                                                                                                     i=i,
                                                                                                     ic_id=ic_id,
                                                                                                     num_l_ports=num_l_ports,
@@ -3231,14 +3231,14 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
                                                                                                     maxpktsize=maxpktsize,
                                                                                                     msg_name=msg_name))
                 elif topo_options['router_module'] == 'WHVCSourceRouter':
-                    credit_t = "typename WHVCSourceRouter<{num_l_ports}, {num_r_ports}, 1, {buffersize}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {max_hops}>::Credit_ret_t".format(
+                    credit_t = "typename interconnect::WHVCSourceRouter<{num_l_ports}, {num_r_ports}, 1, {buffersize}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {max_hops}>::Credit_ret_t".format(
                                                                                 ic_id=ic_id,
                                                                                 num_l_ports=num_l_ports,
                                                                                 num_r_ports=num_r_ports,
                                                                                 buffersize=buffersize,
                                                                                 max_hops=noc_dests,
                                                                                 msg_name=msg_name)
-                    ic_collate_add("WHVCSourceRouter<{num_l_ports}, {num_r_ports}, 1, {buffersize}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {max_hops}> router_{i}_{msg_name};".format(
+                    ic_collate_add("interconnect::WHVCSourceRouter<{num_l_ports}, {num_r_ports}, 1, {buffersize}, interconnect::Msg<interconnect_config_icg::msgs::{msg_name}>, {max_hops}> router_{i}_{msg_name};".format(
                                                                                 i=i,
                                                                                 ic_id=ic_id,
                                                                                 num_l_ports=num_l_ports,
