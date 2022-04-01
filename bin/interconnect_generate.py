@@ -1314,7 +1314,7 @@ class CrossbarGenerator:
         return s
 
     # This is topo-agnostic, move into a global section
-    def generate_ic_interface(self, part_name, handler_instances, handler_constructors, handler_binds):
+    def generate_ic_interface(self, part_name, handler_instances, handler_constructors, handler_binds, handler_inits):
         handler_instances_s = str()
         for (handler_type, handler_template_args, handler_name) in handler_instances:
             handler_template_args = [str(i) for i in handler_template_args]
@@ -1330,6 +1330,10 @@ class CrossbarGenerator:
         for handler_bind in handler_binds:
             handler_binds_s += 0*' ' + "{}\n".format(handler_bind)
 
+        handler_inits_s = str()
+        for handler_init in handler_inits:
+            handler_inits_s += ",\n" + 34*' ' + "{}".format(handler_init)
+
         s = """\
     template <Connections::connections_port_t PortType>
     class InterconnectInterface<interconnect_config::parts::{part_name}, PortType> {{
@@ -1342,13 +1346,15 @@ class CrossbarGenerator:
 
 
         InterconnectInterface() : clk(sc_gen_unique_name("ic_iface_{part_name_lower}_clk")),
-                                  rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")) {{
+                                  rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")){handler_inits}
+        {{
 
 {handler_constructors}
         }}
 
         explicit InterconnectInterface(const char *name) : clk(sc_gen_unique_name("ic_iface_{part_name_lower}_clk")),
-                                                           rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")) {{
+                                                           rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")){handler_inits}
+    {{
 
 {handler_constructors}
         }}
@@ -1359,7 +1365,8 @@ class CrossbarGenerator:
                    part_name_lower=part_name.lower(),
                    handler_instances=handler_instances_s,
                    handler_constructors=handler_constructors_s,
-                   handler_binds=handler_binds_s)
+                   handler_binds=handler_binds_s,
+                   handler_inits=handler_inits_s)
 
         return s
 
@@ -1427,7 +1434,7 @@ class LinkGenerator:
 
 
     # This is topo-agnostic, move into a global section
-    def generate_ic_interface(self, part_name, handler_instances, handler_constructors, handler_binds):
+    def generate_ic_interface(self, part_name, handler_instances, handler_constructors, handler_binds, handler_inits):
         handler_instances_s = str()
         for (handler_type, handler_template_args, handler_name) in handler_instances:
             handler_template_args = [str(i) for i in handler_template_args]
@@ -1443,6 +1450,11 @@ class LinkGenerator:
         for handler_bind in handler_binds:
             handler_binds_s += 0*' ' + "{}\n".format(handler_bind)
 
+
+        handler_inits_s = str()
+        for handler_init in handler_inits:
+            handler_inits_s += ",\n" + 8*' ' + "{}".format(handler_init)
+
         s = """\
     template <Connections::connections_port_t PortType>
     class InterconnectInterface<interconnect_config::parts::{part_name}, PortType> {{
@@ -1455,13 +1467,15 @@ class LinkGenerator:
 
 
         InterconnectInterface() : clk(sc_gen_unique_name("ic_iface_{part_name_lower}_clk")),
-                                  rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")) {{
+                                  rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")){handler_inits}
+        {{
 
 {handler_constructors}
         }}
 
         explicit InterconnectInterface(const char *name) : clk(sc_gen_unique_name("ic_iface_{part_name_lower}_clk")),
-                                                           rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")) {{
+                                                           rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst"){handler_inits}
+        {{
 
 {handler_constructors}
         }}
@@ -1472,7 +1486,8 @@ class LinkGenerator:
                    part_name_lower=part_name.lower(),
                    handler_instances=handler_instances_s,
                    handler_constructors=handler_constructors_s,
-                   handler_binds=handler_binds_s)
+                   handler_binds=handler_binds_s,
+                   handler_inits=handler_inits_s)
 
         return s
 
@@ -1688,6 +1703,7 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
     handler_instances = dict()
     handler_constructors = dict()
     handler_binds = dict()
+    handler_inits = dict()
     msg_types_s = str()
     ic_types = list()
 
@@ -1722,6 +1738,7 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
         handler_instances.setdefault(part_type, list())
         handler_constructors.setdefault(part_type, list())
         handler_binds.setdefault(part_type, list())
+        handler_inits.setdefault(part_type, list())
 
     def add_ic_type(ic_id):
         if ic_id not in ic_types:
@@ -1755,6 +1772,9 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
             for port_id in port_ids:
                 inst_name = inst_name_base + "_" + str(port_id)
                 handler_instances[part_type].append( ("Connections::Combinational", ["interconnect::Msg<interconnect_config::msgs::{}> ".format(msg_type)], inst_name) )
+                handler_instances[part_type].append( ("Connections::DummySource", ["interconnect::Msg<interconnect_config::msgs::{}> ".format(msg_type)], inst_name + "_src") )
+                handler_inits[part_type].append( "{inst_name}(\"{inst_name}\")".format(inst_name=inst_name + "_src") )
+                handler_constructors[part_type] += ["{inst_name}_src.clk(clk); {inst_name}_src.rst(rst); {inst_name}_src.out({inst_name});".format(inst_name=inst_name) ]
                 b_s += "if(port_id == {port_id}) {{ p({inst_name}); }}\n            else ".format(port_id=port_id, inst_name=inst_name)
             b_s += "{{}}".format()           
 
@@ -1790,6 +1810,9 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
             for port_id in port_ids:
                 inst_name = inst_name_base + "_" + str(port_id)
                 handler_instances[part_type].append( ("Connections::Combinational", ["interconnect::Msg<interconnect_config::msgs::{}> ".format(msg_type)], inst_name) )
+                handler_instances[part_type].append( ("Connections::DummySink", ["interconnect::Msg<interconnect_config::msgs::{}> ".format(msg_type)], inst_name + "_sink") )
+                handler_inits[part_type].append( "{inst_name}(\"{inst_name}\")".format(inst_name=inst_name + "_sink") )
+                handler_constructors[part_type] += ["{inst_name}_sink.clk(clk); {inst_name}_sink.rst(rst); {inst_name}_sink.in({inst_name});".format(inst_name=inst_name)]
                 b_s += "if(port_id == {port_id}) {{ p({inst_name}); }}\n            else ".format(port_id=port_id, inst_name=inst_name)
             b_s += "{{}}".format()
 
@@ -3919,7 +3942,8 @@ namespace interconnect {{
         print(link_gen.generate_ic_interface(part_type,
                                              handler_instances[part_type],
                                              handler_constructors[part_type],
-                                             handler_binds[part_type]), file=f)
+                                             handler_binds[part_type],
+                                             handler_inits[part_type]), file=f)
 
     print(4*' ' + "/////////// Interconnect ///////////////", file=f)
     for ic_type in ic_types:
