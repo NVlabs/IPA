@@ -1453,7 +1453,7 @@ class LinkGenerator:
 
         handler_inits_s = str()
         for handler_init in handler_inits:
-            handler_inits_s += ",\n" + 8*' ' + "{}".format(handler_init)
+            handler_inits_s += ",\n" + 34*' ' + "{}".format(handler_init)
 
         s = """\
     template <Connections::connections_port_t PortType>
@@ -1474,7 +1474,7 @@ class LinkGenerator:
         }}
 
         explicit InterconnectInterface(const char *name) : clk(sc_gen_unique_name("ic_iface_{part_name_lower}_clk")),
-                                                           rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst"){handler_inits}
+                                                           rst(sc_gen_unique_name("ic_iface_{part_name_lower}_rst")){handler_inits}
         {{
 
 {handler_constructors}
