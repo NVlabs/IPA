@@ -16,33 +16,21 @@
  * limitations under the License.
  */
 
-// Header file to declare interconnects, units, and messages for Interconnect
-// Prototyping Assistant. (IPA)
+// This is a stub needed for the generated interconnect, so that downstream flow
+// and simulation knows where to look for it.
 
-#ifndef __INTERCONNECT_CONFIG_H__
-#define __INTERCONNECT_CONFIG_H__
+#ifndef GROUT_0_H
+#define GROUT_0_H
 
-#include <interconnect/include/Interconnect.hpp>
+#include <systemc.h>
+#include <nvhls_connections.h>
+#include <nvhls_packet.h>
 
-namespace interconnect_config {
-IC_BEGIN_INTERCONNECTS
-IC_ADD_INTERCONNECT(pcmodulearray)
-IC_END_INTERCONNECTS
+#include <interconnect/Interconnect.hpp>
+#include "interconnect_config.hpp"
 
-// Maps are used to set custom numbered routing, for flit adapter traffic or
-// other more custom uses.
-IC_BEGIN_DEST_MAPS
-IC_END_DEST_MAPS
-
-IC_BEGIN_PARTITION_TYPES
-IC_BEGIN_PARTITION(ProducerConsumerPart)
-IC_END_PARTITION
-IC_END_PARTITION_TYPES
-
-IC_BEGIN_MESSAGE_TYPES
-IC_ADD_MESSAGE_TYPE(my_msg, NVUINTW(64))
-IC_ADD_MESSAGE_TYPE(my_ctrl, bool)
-IC_END_MESSAGE_TYPES
-};
+#if defined(INTERCONNECT_GEN)
+#include ic_header(INTERCONNECT_GEN)
+#endif  // if defined(INTERCONNECT_GEN)
 
 #endif

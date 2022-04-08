@@ -24,7 +24,7 @@
 #include <nvhls_packet.h>
 
 #include <arbitrated_crossbar.h>
-#include <interconnect/include/Interconnect.hpp>
+#include <interconnect/Interconnect.hpp>
 #include "interconnect_config.hpp"
 
 #ifdef INTERCONNECT_GEN

@@ -16,7 +16,7 @@
 # 
 #
 
-ROOT := ../../../..
+ROOT := ../../..
 
 PE_WIDTH ?= 4
 PE_HEIGHT ?= 4
@@ -27,7 +27,7 @@ BUILD ?= $(PE_WIDTH)x$(PE_HEIGHT)
 INTERCONNECT_SC_OBJECT_PATH := my_testbench.dut.pcmodulearray_inst.interconnect_0
 INTERCONNECT_TB_OBJECT_PATH := my_testbench.dut.interconnect_0
 
-include ${ROOT}/cmod/interconnect/Interconnect.mk
+include ${ROOT}/cmod/Interconnect.mk
 
 BUP_BLOCKS := 
 RUN_SCVERIFY := 0
@@ -44,6 +44,6 @@ COMPILER_FLAGS += INTERCONNECT_GEN=$(INTERCONNECT_GEN_HPP_FILE)
 COMPILER_FLAGS += DEBUG_LEVEL=2
 
 SEARCH_PATH += $(RAPIDJSON_HOME)/include
-SEARCH_PATH += ${TOT}/cmod/interconnect/include
+SEARCH_PATH += ${TOT}/cmod/include
 
-SRC_PATH = ${ROOT}/cmod/interconnect/ProducerConsumer
+SRC_PATH = ${ROOT}/cmod/ProducerConsumer

@@ -55,10 +55,10 @@ ifeq ($(SIM_MODE),2)
 	COMPILER_FLAGS += CONNECTIONS_FAST_SIM SC_INCLUDE_DYNAMIC_PROCESSES
 endif
 
-ifneq ($(shell echo "${CATAPULT_HOME}" | grep '10\.'),)
+ifneq ($(shell echo "${CATAPULT_HOME}" | grep '10\.5'),)
 # 10.x we do not add this capability in.
 else
-# Assumes 2021 and above
+# Assumes 10.6a and above
 USER_FLAGS += -DCAP_CONNECTIONS_MULTI_CLK
 endif
 

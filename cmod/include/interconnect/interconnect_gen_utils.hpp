@@ -23,10 +23,10 @@
 #undef NVHLS_ASSERT_H
 #include <nvhls_assert.h>
 #include <CombinationalBufferedPorts.h>
-#include <interconnect/include/Interconnect.hpp>
+#include <interconnect/Interconnect.hpp>
 #include <Arbiter.h>
 #include <arbitrated_crossbar.h>
-#include <interconnect/include/LUT_Routers.hpp>
+#include <interconnect/LUT_Routers.hpp>
 #include <one_hot_to_bin.h>
 
 namespace interconnect {

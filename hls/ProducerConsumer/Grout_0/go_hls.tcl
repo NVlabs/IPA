@@ -15,7 +15,7 @@
 # limitations under the License.
 # 
 
-source ../../../../nvhls_exec.tcl
+source ../../../nvhls_exec.tcl
 
 proc nvhls::usercmd_pre_analyze {} {
     directive set -STRICT_MIO_SCHEDULING false

@@ -55,9 +55,9 @@ MatchLib will be downloaded to matchlib/ and rapidjson to matchlib/rapidjson/.
 
 * `TUTORIAL.md` information on getting started
 * `bin` contains Python scripts for interconnect prototyping assistant
-* `cmod/interconnect/include/*.h` contains header files for functions and classes for Interconnect Prototyping Assistant
-* `cmod/interconnect/ProducerConsumer/` sub-directories containing example IPA use
-* `hls/interconnect/ProducerConsumer/Grout_0/` sub-directories contain HLS scripts for IPA implementation
+* `cmod/include/interconnect/*.h` contains header files for functions and classes for Interconnect Prototyping Assistant
+* `cmod/ProducerConsumer/` sub-directories containing example IPA use
+* `hls/ProducerConsumer/Grout_0/` sub-directories contain HLS scripts for IPA implementation
 * `doc/` contains Makefiles for building Doxygen-based documentation
 
 # API Reference

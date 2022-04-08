@@ -15,7 +15,7 @@
 # limitations under the License.
 # 
 
-ROOT = $(abspath ../../../)
+ROOT = $(abspath ../../)
 include $(ROOT)/cmod/cmod_Makefile
 
 # Configure build name and debug level.
@@ -26,7 +26,7 @@ DEBUG_LEVEL ?= -1
 INTERCONNECT_SC_OBJECT_PATH := my_testbench.dut.pcmodulearray_inst.interconnect_0
 INTERCONNECT_TB_OBJECT_PATH := my_testbench.dut.interconnect_0
 
-include $(ROOT)/cmod/interconnect/Interconnect.mk
+include $(ROOT)/cmod/Interconnect.mk
 
 PE_WIDTH ?= 4
 PE_HEIGHT ?= 4
@@ -37,10 +37,10 @@ USER_FLAGS += -DCONNECTIONS_NAMING_ORIGINAL
 USER_FLAGS += -DSC_INCLUDE_DYNAMIC_PROCESSES -DCONNECTIONS_ACCURATE_SIM
 USER_FLAGS += -DRAPIDJSON_HAS_STDSTRING=1 -DENABLE_PERF_COUNTERS
 USER_FLAGS += -DPE_WIDTH=$(PE_WIDTH) -DPE_HEIGHT=$(PE_HEIGHT)
-ifneq ($(shell echo "${CATAPULT_HOME}" | grep '10\.'),)
+ifneq ($(shell echo "${CATAPULT_HOME}" | grep '10\.5'),)
 # 10.x we do not add this capability in.
 else
-# Assumes 2021 and above
+# Assumes 10.6a and above
 USER_FLAGS += -DCAP_CONNECTIONS_MULTI_CLK
 endif
 

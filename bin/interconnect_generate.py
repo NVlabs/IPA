@@ -3892,8 +3892,8 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
 #if !defined(__INTERCONNECT_GEN_TOP_HPP__)
 #define __INTERCONNECT_GEN_TOP_HPP__
 
-#include <interconnect/include/Interconnect.hpp>
-#include <interconnect/include/interconnect_gen_utils.hpp>
+#include <interconnect/Interconnect.hpp>
+#include <interconnect/interconnect_gen_utils.hpp>
 #include "../interconnect_config.hpp"
 
 namespace interconnect {
