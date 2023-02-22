@@ -230,7 +230,7 @@ class RetimingStages : public sc_module {
       fifos_conn;
 
   RetimingStages()
-      : sc_module(sc_gen_unique_name("retimingstages")),
+      : sc_module(sc_module_name(sc_gen_unique_name("retimingstages"))),
         fifos("fifos"),
         fifos_conn("fifos_conn") {
     for (int i = 0; i < num_stages; i++) {
@@ -282,7 +282,7 @@ class RetimingStages<Message, 1, extra_capacity, PortType> : public sc_module {
   nvhls::nv_array<RetimingStagesInt<Message, 0, PortType>, 1> fifos;
 
   RetimingStages()
-      : sc_module(sc_gen_unique_name("retimingstages")), fifos("fifos") {
+      : sc_module(sc_module_name(sc_gen_unique_name("retimingstages"))), fifos("fifos") {
     fifos[0].clk(clk);
     fifos[0].rst(rst);
     fifos[0].in_port(in_port);
@@ -306,7 +306,7 @@ class RetimingStages<Message, 0, extra_capacity, PortType>
  public:
   RetimingStages()
       : RetimingStages<Message, 1, extra_capacity - 1, PortType>(
-            sc_gen_unique_name("retimingstages")) {}
+            sc_module_name(sc_gen_unique_name("retimingstages"))) {}
 
   explicit RetimingStages(sc_module_name name_)
       : RetimingStages<Message, 1, extra_capacity - 1, PortType>(name_) {}
@@ -321,7 +321,7 @@ class RetimingStages<Message, 0, 0, PortType> : public sc_module {
   Connections::In<Message> in_port;
   Connections::Out<Message> out_port;
 
-  RetimingStages() : sc_module(sc_gen_unique_name("retimingstages")) {
+  RetimingStages() : sc_module(sc_module_name(sc_gen_unique_name("retimingstages"))) {
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
     sensitive << in_port.msg << in_port.val << out_port.rdy;
