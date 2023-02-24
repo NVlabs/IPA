@@ -3647,14 +3647,47 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
                                                 num_dests=this_src_dummy_offset,
                                                 num=num_dests,
                                                 msg_name=msg_name))
+                ic_collate_add("Connections::DummySource<interconnect::Msg<interconnect_config_icg::msgs::{msg_name}> > *routers_{supermsg_idx}_lport_dummy_source[{num_dests}];" \
+                                        .format(supermsg_idx=supermsg_idx,
+                                                num_routers=num_routers,
+                                                num_dests=this_src_dummy_offset,
+                                                num=num_dests,
+                                                msg_name=msg_name))
+                ic_collate_select(ic_id, grout_constructors_pre, "for(int i=0; i < {num}; ++i)".format(num=this_src_dummy_offset) )
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_source[i] = new Connections::DummySource<interconnect::Msg<interconnect_config_icg::msgs::{msg_name}> >(\"lport_dummy_source\");".format(supermsg_idx=supermsg_idx,
+                                                num_routers=num_routers,
+                                                msg_name=msg_name))
+                ic_collate_select(ic_id, grout_constructors_post, "for(int i=0; i < {num}; ++i)".format(num=this_src_dummy_offset) )
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_source[i]->clk(clk);".format(supermsg_idx=supermsg_idx))
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_source[i]->rst(rst);".format(supermsg_idx=supermsg_idx))
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_source[i]->out(routers_{supermsg_idx}_lport_dummy_ingress[i]);".format(supermsg_idx=supermsg_idx))
+                
                 if topo_options['router_module'] == 'WHVCSourceRouter':
+                    ic_collate_select(ic_id, grout_instances)
                     ic_collate_add("Connections::Combinational<{credit_t}> routers_{supermsg_idx}_lport_credit_dummy_ingress[{num_dests}];" \
                                             .format(supermsg_idx=supermsg_idx,
                                                     num_routers=num_routers,
                                                     num_dests=this_src_dummy_offset,
                                                     num=num_dests,
                                                     msg_name=msg_name,
-                                                    credit_t=credit_t))                
+                                                    credit_t=credit_t))
+                    ic_collate_add("Connections::DummySource<{credit_t}> *routers_{supermsg_idx}_lport_credit_dummy_source[{num_dests}];" \
+                                            .format(supermsg_idx=supermsg_idx,
+                                                    num_routers=num_routers,
+                                                    num_dests=this_src_dummy_offset,
+                                                    num=num_dests,
+                                                    msg_name=msg_name,
+                                                    credit_t=credit_t))
+                    ic_collate_select(ic_id, grout_constructors_pre, "for(int i=0; i < {num}; ++i)".format(num=this_src_dummy_offset) )
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_source[i] = new Connections::DummySource<{credit_t}>(\"credit_dummy_source\");".format(supermsg_idx=supermsg_idx,
+                                                    num_routers=num_routers,
+                                                    msg_name=msg_name))
+                    ic_collate_select(ic_id, grout_constructors_post, "for(int i=0; i < {num}; ++i)".format(num=this_src_dummy_offset) )
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_source[i]->clk(clk);".format(supermsg_idx=supermsg_idx))
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_source[i]->rst(rst);".format(supermsg_idx=supermsg_idx))
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_source[i]->out(routers_{supermsg_idx}_lport_credit_dummy_ingress[i]);".format(supermsg_idx=supermsg_idx))
+                ic_collate_select(ic_id, grout_instances)
+                                   
             if this_dest_dummy_offset > 0:
                 ic_collate_select(ic_id, grout_instances)
                 ic_collate_add("Connections::Combinational<interconnect::Msg<interconnect_config_icg::msgs::{msg_name}> > routers_{supermsg_idx}_lport_dummy_egress[{num_srcs}];" \
@@ -3662,6 +3695,20 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
                                                 num_routers=num_routers,
                                                 num_srcs=this_dest_dummy_offset,
                                                 msg_name=msg_name))
+                ic_collate_add("Connections::DummySink<interconnect::Msg<interconnect_config_icg::msgs::{msg_name}> > *routers_{supermsg_idx}_lport_dummy_sink[{num_srcs}];" \
+                                        .format(supermsg_idx=supermsg_idx,
+                                                num_routers=num_routers,
+                                                num_srcs=this_dest_dummy_offset,
+                                                msg_name=msg_name))
+                ic_collate_select(ic_id, grout_constructors_pre, "for(int i=0; i < {num}; ++i)".format(num=this_dest_dummy_offset) )
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_sink[i] = new Connections::DummySink<interconnect::Msg<interconnect_config_icg::msgs::{msg_name}> >(\"lport_dummy_sink\");".format(supermsg_idx=supermsg_idx,
+                                                num_routers=num_routers,
+                                                msg_name=msg_name))
+                ic_collate_select(ic_id, grout_constructors_post, "for(int i=0; i < {num}; ++i)".format(num=this_dest_dummy_offset) )
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_sink[i]->clk(clk);".format(supermsg_idx=supermsg_idx))
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_sink[i]->rst(rst);".format(supermsg_idx=supermsg_idx))
+                ic_collate_add("routers_{supermsg_idx}_lport_dummy_sink[i]->in(routers_{supermsg_idx}_lport_dummy_egress[i]);".format(supermsg_idx=supermsg_idx))
+
                 if topo_options['router_module'] == 'WHVCSourceRouter':
                     ic_collate_add("Connections::Combinational<{credit_t}> routers_{supermsg_idx}_lport_credit_dummy_egress[{num_srcs}];" \
                                             .format(supermsg_idx=supermsg_idx,
@@ -3669,6 +3716,21 @@ def do_generate(YAML_DATA, IC_DATA, f, rpt, NOC_IS_NOP=False):
                                                     num_srcs=this_dest_dummy_offset,
                                                     msg_name=msg_name,
                                                     credit_t=credit_t))
+                    ic_collate_add("Connections::DummySink<{credit_t}> *routers_{supermsg_idx}_lport_credit_dummy_sink[{num_srcs}];" \
+                                            .format(supermsg_idx=supermsg_idx,
+                                                    num_routers=num_routers,
+                                                    num_srcs=this_dest_dummy_offset,
+                                                    msg_name=msg_name,
+                                                    credit_t=credit_t))
+                    ic_collate_select(ic_id, grout_constructors_pre, "for(int i=0; i < {num}; ++i)".format(num=this_dest_dummy_offset) )
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_sink[i] = new Connections::DummySink<{credit_t}>(\"credit_dummy_sink\");".format(supermsg_idx=supermsg_idx,
+                                                    num_routers=num_routers,
+                                                    msg_name=msg_name))
+                    ic_collate_select(ic_id, grout_constructors_post, "for(int i=0; i < {num}; ++i)".format(num=this_dest_dummy_offset) )
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_sink[i]->clk(clk);".format(supermsg_idx=supermsg_idx))
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_sink[i]->rst(rst);".format(supermsg_idx=supermsg_idx))
+                    ic_collate_add("routers_{supermsg_idx}_lport_credit_dummy_sink[i]->in(routers_{supermsg_idx}_lport_credit_dummy_egress[i]);".format(supermsg_idx=supermsg_idx))
+
             if num_dests > 0:
                 if grout:
                     this_src_idx_offset = defaultdict(lambda: defaultdict(lambda: 0))
