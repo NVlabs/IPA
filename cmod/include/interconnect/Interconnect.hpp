@@ -899,7 +899,11 @@ class InterconnectBase
     srcs.push_back(&p);
 
     std::string port_name = p.val.name();
+#ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
+#else
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_src_name(&p, port_name);
@@ -913,7 +917,11 @@ class InterconnectBase
     dests.push_back(&p);
 
     std::string port_name = p.val.name();
+#ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
+#else
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_dest_name(&p, port_name);
@@ -1115,7 +1123,11 @@ class InterconnectBase
     Bind<typename MSG_TYPE::data_t>(is->im, MSG_TYPE::msg_id, MSG_TYPE::name);
 
     std::string port_name = p.val.name();
+#ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
+#else
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_src_name(&is->im, port_name);
@@ -1130,7 +1142,11 @@ class InterconnectBase
     Bind<typename MSG_TYPE::data_t>(ij->im, MSG_TYPE::msg_id, MSG_TYPE::name);
 
     std::string port_name = p.val.name();
+#ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
+#else
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_dest_name(&ij->im, port_name);
@@ -1527,8 +1543,8 @@ class InterconnectBase
           // Create the new channel object
           IM_chanlink_t *new_channel =
               new IM_chanlink_t(new_channel_name.c_str());
-          new_channel->in_str = get_src_name(*it_src).c_str();
-          new_channel->out_str = get_dest_name(*it_dest).c_str();
+          new_channel->in_str = get_src_name(*it_src);
+          new_channel->out_str = get_dest_name(*it_dest);
 
           // Add it to channels_middle
           channels_middle[(*it_src)][(*it_dest)] = new_channel;
@@ -2418,7 +2434,11 @@ class InterconnectInterface {
         new ICMToSpecialized<IM_t, MSG_TYPE>(p);
 
     std::string port_name = p.val.name();
+#ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
+#else
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+#endif
       port_name.erase(port_name.length() - 4, 4);
     }
 
@@ -2442,7 +2462,11 @@ class InterconnectInterface {
         new ICMFromSpecialized<IM_t, MSG_TYPE>(p);
 
     std::string port_name = p.val.name();
+#ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
+#else
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+#endif
       port_name.erase(port_name.length() - 4, 4);
     }
 
