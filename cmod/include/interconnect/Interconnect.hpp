@@ -610,14 +610,14 @@ class ICMFromSpecialized : public sc_module,
     // Pass up to handler interface
     this->im_ptr = &im;
 
-    p.msg(int_msg);
-    p.rdy(int_rdy);
-    p.val(int_val);
+    p._DATNAME_(int_msg);
+    p._RDYNAME_(int_rdy);
+    p._VLDNAME_(int_val);
 
 #ifdef CONNECTIONS_SIM_ONLY
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    this->sensitive << p.msg << p.val << im.rdy;
+    this->sensitive << p._DATNAME_ << p._VLDNAME_ << im._RDYNAME_;
 
     im.disable_spawn();
 #endif
@@ -627,8 +627,8 @@ class ICMFromSpecialized : public sc_module,
     bool is_val = int_val.read();
 
     // Set val and msg respectively
-    im.val.write(is_val);
-    int_rdy.write(im.rdy.read());
+    im._VLDNAME_.write(is_val);
+    int_rdy.write(im._RDYNAME_.read());
 
     // Only convert if is_val (to prevent X's)
     if (is_val) {
@@ -647,7 +647,7 @@ class ICMFromSpecialized : public sc_module,
       Marshaller<Wrapped<IM_t>::width> im_marshaller;
       Wrapped<IM_t> im_wm(im_msg);
       im_wm.Marshall(im_marshaller);
-      im.msg.write(im_marshaller.GetResult());
+      im._DATNAME_.write(im_marshaller.GetResult());
     }
   }
 };  // class ICMNewToOld
@@ -679,31 +679,31 @@ class ICMToSpecialized : public sc_module,
     // Pass up to handler interface
     this->im_ptr = &im;
 
-    p.msg(int_msg);
-    p.rdy(int_rdy);
-    p.val(int_val);
+    p._DATNAME_(int_msg);
+    p._RDYNAME_(int_rdy);
+    p._VLDNAME_(int_val);
 
 #ifdef CONNECTIONS_SIM_ONLY
     // SC_METHOD(do_bypass);
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    this->sensitive << im.msg << im.val << p.rdy;
+    this->sensitive << im._DATNAME_ << im._VLDNAME_ << p._RDYNAME_;
 
     im.disable_spawn();
 #endif
   }
 
   void do_bypass() {
-    bool is_val = im.val.read();
+    bool is_val = im._VLDNAME_.read();
 
     // Set val and msg respectively
     int_val.write(is_val);
-    im.rdy.write(int_rdy.read());
+    im._RDYNAME_.write(int_rdy.read());
 
     // Only convert if is_val (to prevent X's)
     if (is_val) {
       // Convert msg from bits
-      Marshaller<Wrapped<IM_t>::width> im_marshaller(im.msg.read());
+      Marshaller<Wrapped<IM_t>::width> im_marshaller(im._DATNAME_.read());
       Wrapped<IM_t> im_result;
       im_result.Marshall(im_marshaller);
       IM_t im_msg = im_result.val;
@@ -898,12 +898,8 @@ class InterconnectBase
   void Bind(IM_src_t &p, unsigned int type_width, const char *type_name) {
     srcs.push_back(&p);
 
-    std::string port_name = p.val.name();
-#ifdef _VLDNAMESTR_
-    if (port_name.substr(port_name.length() - 4, 4) == "_val") {
-#else
+    std::string port_name = p._VLDNAME_.name();
     if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_src_name(&p, port_name);
@@ -916,12 +912,8 @@ class InterconnectBase
   void Bind(IM_dest_t &p, unsigned int type_width, const char *type_name) {
     dests.push_back(&p);
 
-    std::string port_name = p.val.name();
-#ifdef _VLDNAMESTR_
-    if (port_name.substr(port_name.length() - 4, 4) == "_val") {
-#else
+    std::string port_name = p._VLDNAME_.name();
     if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_dest_name(&p, port_name);
@@ -1004,14 +996,14 @@ class InterconnectBase
       // Pass up to handler interface
       this->im_ptr = &im;
 
-      p.msg(int_msg);
-      p.rdy(int_rdy);
-      p.val(int_val);
+      p._DATNAME_(int_msg);
+      p._RDYNAME_(int_rdy);
+      p._VLDNAME_(int_val);
 
 #ifdef CONNECTIONS_SIM_ONLY
       declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                              SC_CURRENT_USER_MODULE, do_bypass);
-      this->sensitive << p.msg << p.val << im.rdy;
+      this->sensitive << p._DATNAME_ << p._VLDNAME_ << im._RDYNAME_;
 
       im.disable_spawn();
 #endif
@@ -1021,8 +1013,8 @@ class InterconnectBase
       bool is_val = int_val.read();
 
       // Set val and msg respectively
-      im.val.write(is_val);
-      int_rdy.write(im.rdy.read());
+      im._VLDNAME_.write(is_val);
+      int_rdy.write(im._RDYNAME_.read());
 
       // Only convert if is_val (to prevent X's)
       if (is_val) {
@@ -1041,7 +1033,7 @@ class InterconnectBase
         Marshaller<Wrapped<typename interconnect_t::IM_t>::width> im_marshaller;
         Wrapped<typename interconnect_t::IM_t> im_wm(im_msg);
         im_wm.Marshall(im_marshaller);
-        im.msg.write(im_marshaller.GetResult());
+        im._DATNAME_.write(im_marshaller.GetResult());
       }
     }
   };  // class ICMFromSpecialized
@@ -1076,32 +1068,32 @@ class InterconnectBase
       // Pass up to handler interface
       this->im_ptr = &im;
 
-      p.msg(int_msg);
-      p.rdy(int_rdy);
-      p.val(int_val);
+      p._DATNAME_(int_msg);
+      p._RDYNAME_(int_rdy);
+      p._VLDNAME_(int_val);
 
 #ifdef CONNECTIONS_SIM_ONLY
       // SC_METHOD(do_bypass);
       declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                              SC_CURRENT_USER_MODULE, do_bypass);
-      this->sensitive << im.msg << im.val << p.rdy;
+      this->sensitive << im._DATNAME_ << im._VLDNAME_ << p._RDYNAME_;
 
       im.disable_spawn();
 #endif
     }
 
     void do_bypass() {
-      bool is_val = im.val.read();
+      bool is_val = im._VLDNAME_.read();
 
       // Set val and msg respectively
       int_val.write(is_val);
-      im.rdy.write(int_rdy.read());
+      im._RDYNAME_.write(int_rdy.read());
 
       // Only convert if is_val (to prevent X's)
       if (is_val) {
         // Convert msg from bits
         Marshaller<Wrapped<typename interconnect_t::IM_t>::width> im_marshaller(
-            im.msg.read());
+            im._DATNAME_.read());
         Wrapped<typename interconnect_t::IM_t> im_result;
         im_result.Marshall(im_marshaller);
         typename interconnect_t::IM_t im_msg = im_result.val;
@@ -1122,12 +1114,8 @@ class InterconnectBase
         new ICMFromSpecialized<MSG_TYPE>(*this, p);
     Bind<typename MSG_TYPE::data_t>(is->im, MSG_TYPE::msg_id, MSG_TYPE::name);
 
-    std::string port_name = p.val.name();
-#ifdef _VLDNAMESTR_
-    if (port_name.substr(port_name.length() - 4, 4) == "_val") {
-#else
+    std::string port_name = p._VLDNAME_.name();
     if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_src_name(&is->im, port_name);
@@ -1141,12 +1129,8 @@ class InterconnectBase
     ICMToSpecialized<MSG_TYPE> *ij = new ICMToSpecialized<MSG_TYPE>(*this, p);
     Bind<typename MSG_TYPE::data_t>(ij->im, MSG_TYPE::msg_id, MSG_TYPE::name);
 
-    std::string port_name = p.val.name();
-#ifdef _VLDNAMESTR_
-    if (port_name.substr(port_name.length() - 4, 4) == "_val") {
-#else
+    std::string port_name = p._VLDNAME_.name();
     if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
       port_name.erase(port_name.length() - 4, 4);
     }
     set_dest_name(&ij->im, port_name);
@@ -1864,9 +1848,9 @@ class InterconnectBase
       // SC_METHOD(do_bypass);
       declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                              SC_CURRENT_USER_MODULE, do_bypass);
-      this->sensitive << channels_begin[p]->out_msg
-                      << channels_begin[p]->out_val
-                      << channels_middle[p][q]->in_rdy;
+      this->sensitive << channels_begin[p]->_DATNAMEOUT_
+                      << channels_begin[p]->_VLDNAMEOUT_
+                      << channels_middle[p][q]->_RDYNAMEIN_;
 
       channels_begin[p]->out_bound = true;
       channels_middle[p][q]->in_bound = true;
@@ -1875,15 +1859,15 @@ class InterconnectBase
     }
 
     void do_bypass() {
-      bool is_val = channels_begin[p]->out_val.read();
+      bool is_val = channels_begin[p]->_VLDNAMEOUT_.read();
 
       // Set val and msg respectively
-      channels_middle[p][q]->in_val.write(is_val);
-      channels_begin[p]->out_rdy.write(channels_middle[p][q]->in_rdy.read());
+      channels_middle[p][q]->_VLDNAMEIN_.write(is_val);
+      channels_begin[p]->_RDYNAMEOUT_.write(channels_middle[p][q]->_RDYNAMEIN_.read());
 
       // Only convert if is_val (to prevent X's)
       if (is_val) {
-        channels_middle[p][q]->in_msg.write(channels_begin[p]->out_msg.read());
+        channels_middle[p][q]->_DATNAMEIN_.write(channels_begin[p]->_DATNAMEOUT_.read());
       }
     }
   };  // end class InputBypass
@@ -2033,9 +2017,9 @@ class InterconnectBase
       // SC_METHOD(do_bypass);
       declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                              SC_CURRENT_USER_MODULE, do_bypass);
-      this->sensitive << channels_middle[q][p]->out_msg
-                      << channels_middle[q][p]->out_val
-                      << channels_end[p]->in_rdy;
+      this->sensitive << channels_middle[q][p]->_DATNAMEOUT_
+                      << channels_middle[q][p]->_VLDNAMEOUT_
+                      << channels_end[p]->_RDYNAMEIN_;
 
       channels_end[p]->in_bound = true;
       channels_middle[q][p]->out_bound = true;
@@ -2046,15 +2030,15 @@ class InterconnectBase
     }
 
     void do_bypass() {
-      bool is_val = channels_middle[q][p]->out_val.read();
+      bool is_val = channels_middle[q][p]->_VLDNAMEOUT_.read();
 
       // Set val and msg respectively
-      channels_end[p]->in_val.write(is_val);
-      channels_middle[q][p]->out_rdy.write(channels_end[p]->in_rdy.read());
+      channels_end[p]->_VLDNAMEIN_.write(is_val);
+      channels_middle[q][p]->_RDYNAMEOUT_.write(channels_end[p]->_RDYNAMEIN_.read());
 
       // Only convert if is_val (to prevent X's)
       if (is_val) {
-        channels_end[p]->in_msg.write(channels_middle[q][p]->out_msg.read());
+        channels_end[p]->_DATNAMEIN_.write(channels_middle[q][p]->_DATNAMEOUT_.read());
       }
     }
 
@@ -2063,7 +2047,7 @@ class InterconnectBase
 
       while (1) {
         wait();
-        if (channels_end[p]->in_val.read() && channels_end[p]->in_rdy.read())
+        if (channels_end[p]->_VLDNAMEIN_.read() && channels_end[p]->_RDYNAMEIN_.read())
           cycle_count_channel[q][p]++;  // Monitor
       }                                 // while(1)
     }
@@ -2229,7 +2213,7 @@ class OutPortPin : public sc_module {
     // SC_METHOD(do_bypass);
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    this->sensitive << pin.msg << pin.val << port.rdy;
+    this->sensitive << pin._DATNAME_ << pin._VLDNAME_ << port._RDYNAME_;
 
 #ifdef CONNECTIONS_SIM_ONLY
     port.disable_spawn();
@@ -2238,15 +2222,15 @@ class OutPortPin : public sc_module {
   }
 
   void do_bypass() {
-    bool is_val = pin.val.read();
+    bool is_val = pin._VLDNAME_.read();
 
     // Set val and msg respectively
-    port.val.write(is_val);
-    pin.rdy.write(port.rdy.read());
+    port._VLDNAME_.write(is_val);
+    pin._RDYNAME_.write(port._RDYNAME_.read());
 
     // Only convert if is_val (to prevent X's)
     if (is_val) {
-      port.msg.write(pin.msg.read());
+      port._DATNAME_.write(pin._DATNAME_.read());
     }
   }
 };  // class OutPortPin
@@ -2266,7 +2250,7 @@ class InPortPin : public sc_module {
     // SC_METHOD(do_bypass);
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    this->sensitive << port.msg << port.val << pin.rdy;
+    this->sensitive << port._DATNAME_ << port._VLDNAME_ << pin._RDYNAME_;
 
 #ifdef CONNECTIONS_SIM_ONLY
     port.disable_spawn();
@@ -2275,15 +2259,15 @@ class InPortPin : public sc_module {
   }
 
   void do_bypass() {
-    bool is_val = port.val.read();
+    bool is_val = port._VLDNAME_.read();
 
     // Set val and msg respectively
-    pin.val.write(is_val);
-    port.rdy.write(pin.rdy.read());
+    pin._VLDNAME_.write(is_val);
+    port._RDYNAME_.write(pin._RDYNAME_.read());
 
     // Only convert if is_val (to prevent X's)
     if (is_val) {
-      pin.msg.write(port.msg.read());
+      pin._DATNAME_.write(port._DATNAME_.read());
     }
   }
 };  // class InPortPin
@@ -2302,7 +2286,7 @@ class OutPortPin2 : public sc_module {
     // SC_METHOD(do_bypass);
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    this->sensitive << pin.msg << pin.val << port.rdy;
+    this->sensitive << pin._DATNAME_ << pin._VLDNAME_ << port._RDYNAME_;
 
 #ifdef CONNECTIONS_SIM_ONLY
     port.disable_spawn();
@@ -2311,17 +2295,17 @@ class OutPortPin2 : public sc_module {
   }
 
   void do_bypass() {
-    bool is_val = pin.val.read();
+    bool is_val = pin._VLDNAME_.read();
 
     // Set val and msg respectively
-    port.val.write(is_val);
-    pin.rdy.write(port.rdy.read());
+    port._VLDNAME_.write(is_val);
+    pin._RDYNAME_.write(port._RDYNAME_.read());
 
 // Only convert if is_val (to prevent X's)
 #ifndef __SYNTHESIS__
     if (is_val) {
 #endif
-      port.msg.write(pin.msg.read());
+      port._DATNAME_.write(pin._DATNAME_.read());
 #ifndef __SYNTHESIS__
     }
 #endif
@@ -2342,7 +2326,7 @@ class InPortPin2 : public sc_module {
     // SC_METHOD(do_bypass);
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    this->sensitive << port.msg << port.val << pin.rdy;
+    this->sensitive << port._DATNAME_ << port._VLDNAME_ << pin._RDYNAME_;
 
 #ifdef CONNECTIONS_SIM_ONLY
     port.disable_spawn();
@@ -2351,17 +2335,17 @@ class InPortPin2 : public sc_module {
   }
 
   void do_bypass() {
-    bool is_val = port.val.read();
+    bool is_val = port._VLDNAME_.read();
 
     // Set val and msg respectively
-    pin.val.write(is_val);
-    port.rdy.write(pin.rdy.read());
+    pin._VLDNAME_.write(is_val);
+    port._RDYNAME_.write(pin._RDYNAME_.read());
 
 // Only convert if is_val (to prevent X's)
 #ifndef __SYNTHESIS__
     if (is_val) {
 #endif
-      pin.msg.write(port.msg.read());
+      pin._DATNAME_.write(port._DATNAME_.read());
 #ifndef __SYNTHESIS__
     }
 #endif
@@ -2440,12 +2424,8 @@ class InterconnectInterface {
     ICMToSpecialized<IM_t, MSG_TYPE> *ij =
         new ICMToSpecialized<IM_t, MSG_TYPE>(p);
 
-    std::string port_name = p.val.name();
-#ifdef _VLDNAMESTR_
-    if (port_name.substr(port_name.length() - 4, 4) == "_val") {
-#else
+    std::string port_name = p._VLDNAME_.name();
     if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
       port_name.erase(port_name.length() - 4, 4);
     }
 
@@ -2468,12 +2448,8 @@ class InterconnectInterface {
     ICMFromSpecialized<IM_t, MSG_TYPE> *is =
         new ICMFromSpecialized<IM_t, MSG_TYPE>(p);
 
-    std::string port_name = p.val.name();
-#ifdef _VLDNAMESTR_
-    if (port_name.substr(port_name.length() - 4, 4) == "_val") {
-#else
+    std::string port_name = p._VLDNAME_.name();
     if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
       port_name.erase(port_name.length() - 4, 4);
     }
 

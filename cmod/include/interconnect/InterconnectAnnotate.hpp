@@ -114,13 +114,8 @@ void __annotate_vector(std::vector<Connections::Connections_BA_abs *> &v,
       // Get the src_name and dest_name after subtracting off root
       std::string src_name = (it_dest->second)->src_name();
       {
-#ifdef _VLDNAMESTR_
-        if (src_name.length() >= 4 &&
-            src_name.substr(src_name.length() - 4, 4) == "_val") {
-#else
         if (src_name.length() >= 4 &&
             src_name.substr(src_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
           src_name.erase(src_name.length() - 4, 4);
         }
         std::size_t pos = src_name.find(root_name);
@@ -131,13 +126,8 @@ void __annotate_vector(std::vector<Connections::Connections_BA_abs *> &v,
 
       std::string dest_name = (it_dest->second)->dest_name();
       {
-#ifdef _VLDNAMESTR_
-        if (dest_name.length() >= 4 &&
-            dest_name.substr(dest_name.length() - 4, 4) == "_val") {
-#else
         if (dest_name.length() >= 4 &&
             dest_name.substr(dest_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
-#endif
           dest_name.erase(dest_name.length() - 4, 4);
         }
         std::size_t pos = dest_name.find(root_name);

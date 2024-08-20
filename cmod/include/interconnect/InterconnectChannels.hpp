@@ -373,7 +373,7 @@ class CombinationalLink : public Connections::Combinational<Message>,
           ((static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) >
            bw_prob)) {
         // Stall due to congestion modeling!
-        this->out_val.write(false);
+        this->_VLDNAMEOUT_.write(false);
         this->val_set_by_api = false;
       }
     }
@@ -386,7 +386,7 @@ class CombinationalLink : public Connections::Combinational<Message>,
   bool IsValid() {
 
 #ifdef CONNECTIONS_ACCURATE_SIM
-    return this->out_val.read();
+    return this->_VLDNAMEOUT_.read();
 #else
     return false;  // FIXME CONNECTONS_FAST_SIM is currently unsupported by IPA
 #endif
@@ -394,7 +394,7 @@ class CombinationalLink : public Connections::Combinational<Message>,
 
   bool IsReady() {
 #ifdef CONNECTIONS_ACCURATE_SIM
-    return this->out_rdy.read();
+    return this->_RDYNAMEOUT_.read();
 #else
     return false;  // FIXME CONNECTONS_FAST_SIM is currently unsupported by IPA
 #endif

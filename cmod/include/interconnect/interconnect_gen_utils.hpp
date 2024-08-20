@@ -324,7 +324,7 @@ class RetimingStages<Message, 0, 0, PortType> : public sc_module {
   RetimingStages() : sc_module(sc_module_name(sc_gen_unique_name("retimingstages"))) {
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    sensitive << in_port.msg << in_port.val << out_port.rdy;
+    sensitive << in_port._DATNAME_ << in_port._VLDNAME_ << out_port._RDYNAME_;
 
 #ifdef CONNECTIONS_SIM_ONLY
     in_port.disable_spawn();
@@ -335,7 +335,7 @@ class RetimingStages<Message, 0, 0, PortType> : public sc_module {
   RetimingStages(sc_module_name name_) : sc_module(name_) {
     declare_method_process(do_bypass_handle, sc_gen_unique_name("do_bypass"),
                            SC_CURRENT_USER_MODULE, do_bypass);
-    sensitive << in_port.msg << in_port.val << out_port.rdy;
+    sensitive << in_port._DATNAME_ << in_port._VLDNAME_ << out_port._RDYNAME_;
 
 #ifdef CONNECTIONS_SIM_ONLY
     in_port.disable_spawn();
@@ -344,9 +344,9 @@ class RetimingStages<Message, 0, 0, PortType> : public sc_module {
   }
 
   void do_bypass() {
-    out_port.val.write(in_port.val.read());
-    in_port.rdy.write(out_port.rdy.read());
-    out_port.msg.write(in_port.msg.read());
+    out_port._VLDNAME_.write(in_port._VLDNAME_.read());
+    in_port._RDYNAME_.write(out_port._RDYNAME_.read());
+    out_port._DATNAME_.write(in_port._DATNAME_.read());
   }
 };
 
@@ -866,7 +866,7 @@ class UnionMsgMulticast : public nvhls_message {
     Marshaller<Wrapped<typename Message::data_t>::width> marshaller(mbits);
     Wrapped<typename Message::data_t> result;
     result.Marshall(marshaller);
-    m_ = result.val;
+    m_ = result._VLDNAME_;
   }
 
   //// Marshall support
