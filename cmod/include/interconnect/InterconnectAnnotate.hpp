@@ -119,7 +119,7 @@ void __annotate_vector(std::vector<Connections::Connections_BA_abs *> &v,
             src_name.substr(src_name.length() - 4, 4) == "_val") {
 #else
         if (src_name.length() >= 4 &&
-            src_name.substr(src_name.length() - 4, 4) == "_" _VLDNAME_) {
+            src_name.substr(src_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
 #endif
           src_name.erase(src_name.length() - 4, 4);
         }

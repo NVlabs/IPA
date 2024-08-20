@@ -902,7 +902,7 @@ class InterconnectBase
 #ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
 #else
-    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
 #endif
       port_name.erase(port_name.length() - 4, 4);
     }
@@ -920,7 +920,7 @@ class InterconnectBase
 #ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
 #else
-    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
 #endif
       port_name.erase(port_name.length() - 4, 4);
     }
@@ -1126,7 +1126,7 @@ class InterconnectBase
 #ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
 #else
-    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
 #endif
       port_name.erase(port_name.length() - 4, 4);
     }
@@ -1145,7 +1145,7 @@ class InterconnectBase
 #ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
 #else
-    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
 #endif
       port_name.erase(port_name.length() - 4, 4);
     }
@@ -1543,8 +1543,15 @@ class InterconnectBase
           // Create the new channel object
           IM_chanlink_t *new_channel =
               new IM_chanlink_t(new_channel_name.c_str());
-          new_channel->in_str = get_src_name(*it_src);
-          new_channel->out_str = get_dest_name(*it_dest);
+	  std::string src_name_str = get_src_name(*it_src);
+	  char *src_name_new = new char[src_name_str.size() + 1];
+	  strcpy(src_name_new, src_name_str.c_str());
+          new_channel->in_str = src_name_new;
+
+	  std::string dest_name_str = get_dest_name(*it_dest);
+	  char *dest_name_new = new char[dest_name_str.size() + 1];
+	  strcpy(dest_name_new, dest_name_str.c_str());
+          new_channel->out_str = dest_name_new;
 
           // Add it to channels_middle
           channels_middle[(*it_src)][(*it_dest)] = new_channel;
@@ -2437,7 +2444,7 @@ class InterconnectInterface {
 #ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
 #else
-    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
 #endif
       port_name.erase(port_name.length() - 4, 4);
     }
@@ -2465,7 +2472,7 @@ class InterconnectInterface {
 #ifdef _VLDNAMESTR_
     if (port_name.substr(port_name.length() - 4, 4) == "_val") {
 #else
-    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAME_) {
+    if (port_name.substr(port_name.length() - 4, 4) == "_" _VLDNAMESTR_) {
 #endif
       port_name.erase(port_name.length() - 4, 4);
     }
